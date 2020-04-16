@@ -155,20 +155,19 @@ impl<'a> Hash for (dyn Key + 'a) {
 // That's it! Now, we have everything we need to do this.
 #[test]
 fn complex2() {
-    // They're basically the same type, modulo ownership. Can we take a hash set of owned keys...
+    // This is the same situation as complex1() above.
     let mut hash_set: HashSet<OwnedKey> = HashSet::new();
     hash_set.insert(OwnedKey {
         s: "foo".to_string(),
         bytes: b"abc".to_vec(),
     });
 
-    // and use a borrowed key to look things up, thereby eliminating the need to allocate a new
-    // owned key just for this?
     let borrowed_key = BorrowedKey {
         s: "foo",
         bytes: b"abc",
     };
-    // Note the coercion into a trait object.
+    
+    // And here it is! Note the coercion into a trait object.
     assert!(hash_set.contains(&borrowed_key as &dyn Key));
 }
 
