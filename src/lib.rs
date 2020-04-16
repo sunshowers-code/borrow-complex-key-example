@@ -36,7 +36,19 @@ fn basic() {
     // - it's possible to implement a function borrow(&self) -> &B
     // - if implemented, Eq, Ord and Hash are *consistent* between O and B.
     //
-    // String and str satisfy these conditions, so String implements Borrow<str>.
+    // Intuitively, "consistent" means that O and B have implementations of Eq/Ord/Hash that produce
+    // the same results. In most cases, this is going to mean that O and B are a 1:1 map.
+    //
+    // More formally, "consistent" means that, for *all* values of type O `owned1` and `owned2`, if
+    // `owned1.borrow()` produces `borrowed1`, and `owned2.borrow()` produces `borrowed2`:
+    //
+    // Eq:   (owned1 == owned2)  is always the same as  (borrowed1 == borrowed2).
+    // Ord:  owned1.cmp(owned2)  is always the same as  borrowed1.cmp(borrowed2).
+    // Hash: for all hashers, owned1 hashes to the same value as borrowed1 (and owned2 the same as
+    //       borrowed2).
+    //
+    // String and str satisfy these conditions (in fact they use the same underlying code), so
+    // String implements Borrow<str>.
 }
 
 // But what about a user-defined type that's more complex than just a String? For example,
