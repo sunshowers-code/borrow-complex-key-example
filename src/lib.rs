@@ -199,8 +199,13 @@ fn complex2() {
         bytes: b"abc",
     };
     
-    // And here it is! Note the coercion into a trait object.
-    assert!(hash_set.contains(&borrowed_key as &dyn Key));
+    // And here it is!
+    //
+    // &borrowed_key should automatically be coerced into a &dyn Key, but in case it doesn't work,
+    // you can write:
+    //
+    //   assert!(hash_set.contains(&borrowed_key as &dyn Key));
+    assert!(hash_set.contains(&borrowed_key));
 }
 
 // ... not so fast, though! We've attempted to satisfy the constraints required for the Borrow impl.
