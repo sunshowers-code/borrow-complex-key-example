@@ -122,6 +122,11 @@ impl<'a> Borrow<dyn Key + 'a> for OwnedKey {
     }
 }
 
+// Note that while we *could* impl<'a> Borrow<dyn Key + 'a> for BorrowedKey<'a>, we don't have to.
+// https://doc.rust-lang.org/std/collections/struct.HashSet.html#method.contains requires
+// T: Borrow<Q>. This means that Borrow only needs to be implemented for the type stored in the
+// HashSet (or, correspondingly, the key type in a HashMap or BTreeMap).
+
 // Now, remember that for Borrow to be valid, Eq, Hash and Ord need to be consistent. How do
 // we ensure that? Let's see:
 
