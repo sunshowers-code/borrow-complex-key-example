@@ -74,7 +74,20 @@ fn complex1() {
     // assert!(hash_set.contains(&_borrowed_key));
 }
 
-// It turns out that yes, we can do that through the power of trait objects! Here's how:
+// One's first instinct might be to try and write an impl of this sort.
+// (cfg(all(unix, not(unix))) is a logical contradiction, so the code below will never be compiled.)
+#[cfg(all(unix, not(unix)))]
+impl<'a> Borrow<BorrowedKey<'a>> for OwnedKey {
+    fn borrow(&self) -> &BorrowedKey<'a> {
+        // ... uhh, what do we put here? We need to return a *reference* to a BorrowedKey.
+        // But unlike a String/str, there's no BorrowedKey hiding "inside" an OwnedKey.
+        // Seems like a dead end...
+    }
+}
+
+// It turns out that we can approach this in a different manner, using the power of trait objects!
+//
+// Here's how:
 // (1) define a trait object that looks like this.
 trait Key {
     fn key(&self) -> BorrowedKey;
@@ -208,7 +221,7 @@ proptest! {
             hasher.finish()
         }
 
-        assert_eq!(hash_output(&owned1), hash_output(&borrowed1), "consistent Hash")
+        assert_eq!(hash_output(&owned1), hash_output(&borrowed1), "consistent Hash");
         assert_eq!(hash_output(&owned2), hash_output(&borrowed2), "consistent Hash");
 
         // and that's it! Any implementation that satisfies these properties is a valid
