@@ -33,7 +33,7 @@ fn basic() {
     // https://doc.rust-lang.org/std/borrow/trait.Borrow.html
     //
     // For an owned type O and a borrowed type B, O may implement Borrow<B> if:
-    // - it's possible to implement a function borrow(&self): &B
+    // - it's possible to implement a function borrow(&self) -> &B
     // - if implemented, Eq, Ord and Hash are *consistent* between O and B.
     //
     // String and str satisfy these conditions, so String implements Borrow<str>.
