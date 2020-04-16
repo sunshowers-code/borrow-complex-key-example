@@ -90,12 +90,13 @@ impl<'a> Borrow<BorrowedKey<'a>> for OwnedKey {
 // Here's how:
 // (1) define a trait object that looks like this.
 trait Key {
-    fn key(&self) -> BorrowedKey;
+    // (The lifetimes can be elided here, but are shown for clarity.)
+    fn key<'k>(&'k self) -> BorrowedKey<'k>;
 }
 
 // (2) Implement it for both the owned and borrowed versions.
 impl Key for OwnedKey {
-    fn key(&self) -> BorrowedKey {
+    fn key<'k>(&'k self) -> BorrowedKey<'k> {
         BorrowedKey {
             s: self.s.as_str(),
             bytes: self.bytes.as_slice(),
@@ -104,7 +105,8 @@ impl Key for OwnedKey {
 }
 
 impl<'a> Key for BorrowedKey<'a> {
-    fn key(&self) -> BorrowedKey {
+    fn key<'k>(&'k self) -> BorrowedKey<'k> {
+        // This creates a copy of the BorrowedKey with the shorter lifetime 'k.
         *self
     }
 }
