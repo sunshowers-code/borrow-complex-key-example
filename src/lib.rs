@@ -174,7 +174,7 @@ impl<'a> Ord for (dyn Key + 'a) {
     }
 }
 
-// (6) Hash also turns out to be easy to do in this case, though in the general case getting a
+// (6) Hash also turns out to be easy to do in this case, though in some uncommon cases, getting a
 // consistent impl may be trickier and may require implementing Hash by hand for the owned type.
 //
 // Implementing Hash is only necessary if you're using a hash-based data structure.
