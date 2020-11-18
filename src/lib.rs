@@ -128,6 +128,9 @@ impl Key for OwnedKey {
 impl<'a> Key for BorrowedKey<'a> {
     fn key<'k>(&'k self) -> BorrowedKey<'k> {
         // This creates a copy of the BorrowedKey with the shorter lifetime 'k.
+        // 'a can be shortened to 'k because it is a *covariant* lifetime parameter.
+        // For more about lifetime variance, check out my other tutorial:
+        // https://github.com/sunshowers/lifetime-variance-example/
         *self
     }
 }
