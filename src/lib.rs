@@ -96,8 +96,8 @@ fn complex1() {
 }
 
 // One's first instinct might be to try and write an impl of this sort.
-// (cfg(all(unix, not(unix))) is a logical contradiction, so the code below will never be compiled.)
-#[cfg(all(unix, not(unix)))]
+// (any() is false, so the code below will never be compiled.)
+#[cfg(any())]
 impl<'a> Borrow<BorrowedKey<'a>> for OwnedKey {
     fn borrow(&self) -> &BorrowedKey<'a> {
         // ... uhh, what do we put here? We need to return a *reference* to a BorrowedKey.
